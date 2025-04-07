@@ -1,0 +1,10 @@
+Billing recarga
+https://platform.openai.com/settings/organization/billing/overview
+
+dbchatgpt_meta_10x1
+root
+@Local_2021.
+
+# Ejecuta solo los seeders
+$ php artisan db:seed
+$ php artisan migrate:fresh --seed
