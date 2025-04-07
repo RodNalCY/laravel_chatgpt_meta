@@ -1,5 +1,6 @@
 Billing recarga
 https://platform.openai.com/settings/organization/billing/overview
+https://platform.openai.com/settings/organization/api-keys
 
 dbchatgpt_meta_10x1
 root
