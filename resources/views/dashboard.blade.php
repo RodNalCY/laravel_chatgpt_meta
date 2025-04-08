@@ -53,7 +53,7 @@
                 ${userMessage}
                </div>
             </div>`;
-   
+
             chatContainer.innerHTML += userBubble;
             messageInput.value = "";
 
@@ -72,10 +72,10 @@
                 .then(data => {
                     let botBubble = `<div class="text-right">
                                     <div class="inline-block bg-white-300 text-white bg-white-600 p-2 rounded-lg max-w-xs">
-                                        ${data.response}
+                                        ${data.message}
                                     </div>
                                     </div>`;
-    
+
                     chatContainer.innerHTML += botBubble;
                     chatContainer.scrollTop = chatContainer.scrollHeight;
                 })

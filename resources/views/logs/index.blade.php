@@ -1,3 +1,7 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+
 <x-app-layout>
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -18,27 +22,24 @@
                         <tbody>
                             @forelse ($logs as $log)
                             <tr class="border border-gray-300 dark:border-gray-600">
-                                <td class="border border-gray-600 px-4 py-2">{{ $log->id }}</td>
-                                <td class="border border-gray-600 px-4 py-2">{{ $log->info }}</td>
-                                <td class="border border-gray-600 px-4 py-2">{{ $log->message }}</td>
+                                <td class="border border-gray-600 px-4 py-2 text-white">{{ $log->id }}</td>
+                                <td class="border border-gray-600 px-4 py-2 text-white">{{ $log->info }}</td>
+                                <td class="border border-gray-600 px-4 py-2 text-white">{{ $log->message }}</td>
                                 <td class="border border-gray-600 px-4 py-2">
-                                    <!-- <div class="bg-gray-100 dark:bg-gray-700 p-2 rounded-md text-gray-800"> -->
-                                    <!-- <pre class="language-json"> -->
-                                    <!-- <code> -->
-                                    {{ $log->context }}
-                                    <!-- @php 
-                                                       $contextData = is_array($log->context) ? $log->context : json_decode($log->context, true);
-                                                       echo json_encode($contextData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-                                                    @endphp -->
-                                    <!-- </code> -->
-                                    <!-- </pre> -->
-                                    <!-- </div> -->
+                                    <pre class="language-json">
+                                    <code>
+                                    @php
+                                        $contextData = is_array($log->context) ? $log->context : json_decode($log->context, true);
+                                        echo json_encode($contextData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); 
+                                    @endphp
+                                    </code>
+                                   </pre>
                                 </td>
-                                <td class="border border-gray-600 px-4 py-2">{{ $log->created_at->format('d/m/Y H:i:s') }}</td>
+                                <td class="border border-gray-600 px-4 py-2 text-white">{{ $log->created_at->format('d/m/Y H:i:s') }}</td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5" class="text-center py-4">No hay logs disponibles.</td>
+                                <td colspan="5" class="text-center py-4 text-white">No hay logs disponibles.</td>
                             </tr>
                             @endforelse
                         </tbody>

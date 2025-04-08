@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\CustomLogger;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
@@ -14,16 +15,21 @@ use App\Models\Parameter;
 
 class ChatController extends Controller
 {
-    public function ask(Request $request){
+    public function ask(Request $request)
+    {
 
         $userMessage = $request->input('message');
 
-        if(!$userMessage){
-            return response()->json(['response'=>'Por favor, escribe una pregunta.']);
+        if (!$userMessage) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Por favor, escribe una pregunta.'
+            ]);
         }
 
-        try{
-            $client = OpenAI::client(Parameter::getValue('OPENAI_API_KEY'));
+        try {
+            $client = OpenAI::client(Parameter::getParameter('OPENAI_API_KEY'));
+
 
             // **Obtenemos o creamos el chat con los datos en duro**
             $chat = Chat::firstOrCreate(
@@ -69,8 +75,8 @@ class ChatController extends Controller
 
             // **Enviar la consulta a OPENAI**
             $response = $client->chat()->create([
-                'model' => 'gpt-4-turbo',
-                'messages' => [['role' => 'system' , 'content' => $promt]],
+                'model' => 'gpt-4o-mini',
+                'messages' => [['role' => 'system', 'content' => $promt]],
                 'max_tokens' => 100,
             ]);
 
@@ -79,36 +85,53 @@ class ChatController extends Controller
 
             $result = eval("return $query;");
 
-            // **customlogger("info","Mensaje del usuario: ",['result' => $result]);**
+            // **Logueamos el resultado en el archivo de logs de laravel**
+            // Log::info("Mensaje del usuario: ",['result' => $result]);
+
+            // **Logueamos el resultado en la base de datos**
+            CustomLogger::customLog(
+                'info',  // info
+                'Mensaje del usuario: ',  // message
+                ['result' => $result]  // contexto (opcional)
+            );
+
 
             if (!$result) {
                 $responseText = "No se encontraron resultados para la consulta.";
-            } elseif(is_numeric($result)){
+            } elseif (is_numeric($result)) {
                 $responseText = "El resultado es: $result.";
-            } elseif(is_array($result) || is_object($result)){
+            } elseif (is_array($result) || is_object($result)) {
                 $responseText = "Aquí tienes los datos: \n\n" . json_encode($result, JSON_PRETTY_PRINT);
             } else {
                 $responseText = "Aquí tienes la Información solicitada: $result.";
             }
 
-            return response()->json(['response' => $responseText]);
-
-        } catch (\Exception $e){
-             return response()->json(['response'=>'Error al conectar con OpenIA:' . $e->getMessage()]);
+            return response()->json([
+                'status' => true,
+                'query' => $query,
+                'result' => $result,
+                'message' => $responseText
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Error al conectar con OpenIA:' . $e->getMessage()
+            ]);
         }
     }
 
-    public function index(){
-        $chats = Chat::orderBy('id','desc')->get();
+    public function index()
+    {
+        $chats = Chat::orderBy('id', 'desc')->get();
         return view('chats.index', compact('chats'));
     }
 
-    public function show($chatId){
-        $chats = Chat::orderBy('id','desc')->get();
+    public function show($chatId)
+    {
+        $chats = Chat::orderBy('id', 'desc')->get();
         $chat = Chat::findOrFail($chatId);
         $messages = ChatMessage::where('chat_id', $chat->id)->orderBy('created_at', 'asc')->get();
 
-         return view('chats.index', compact('chats', 'chat', 'messages'));
+        return view('chats.index', compact('chats', 'chat', 'messages'));
     }
-
 }
