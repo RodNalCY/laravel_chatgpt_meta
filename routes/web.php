@@ -32,8 +32,12 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/chat', [ChatController::class, 'ask'])->name('chat.ask');
     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
+    
     Route::get('/products', [ProductController::class, 'index'])->name('products.index');
     Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+
+    Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
+    Route::get('/chats/{id}', [ChatController::class, 'show'])->name('chats.show');
 });
 
 require __DIR__.'/auth.php';
