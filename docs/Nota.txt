@@ -1,0 +1,30 @@
+Billing recarga
+https://platform.openai.com/settings/organization/billing/overview
+https://platform.openai.com/settings/organization/api-keys
+
+dbchatgpt_meta_10x1
+root
+@Local_2021.
+
+# Ejecuta solo los seeders
+$ php artisan db:seed
+$ php artisan migrate:fresh --seed
+
+# Instalacion de Breeze en blade con phpunit
+
+$ composer require laravel/breeze --dev
+$ php artisan breeze:install
+$ php artisan migrate
+$ npm install
+$ npm run dev
+
+
+$ composer dump-autoload
+
+APP_URL=https://crm-adp.lab-elsol.com
+DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=labelsol_crm_adp
+DB_USERNAME=labelsol_crm
+DB_PASSWORD=$wNX=3spfW5q
